@@ -1,0 +1,121 @@
+% Renato Paes Leme :: renatoppl@cs.cornell.edu
+%
+% "Design and Analysis of Sponsored Search Mechanisms"
+% Renato Paes Leme, PhD Thesis, Cornell University, 2012
+
+In this directory I provide code that supplements my PhD thesis,
+cited above. The code is written in Octave, which is an open-source
+alternative to MATLAB. The code should run with little or no change
+in MATLAB. Click here to know more or download Octave:
+
+http://www.gnu.org/software/octave/
+
+If you are using Ubuntu (or other Linux distribution with apt-get
+enabled, you can simply write):
+
+$ sudo apt-get install octave
+
+and now everything should be working. Now you can go to the shell
+and simply type:
+
+$ octave
+
+and you get something like:
+
+Copyright (C) 2009 John W. Eaton and others.
+This is free software; see the source code for copying conditions.
+There is ABSOLUTELY NO WARRANTY; not even for MERCHANTABILITY or
+.....
+octave:1>
+
+and you can use it to iteract with octave through the command line.
+
+In order to use the code, simply download them to a folder, cd to
+that folder in the shell and open octave from there, i.e.:
+
+$ cs PATH/TO/phd-thesis-code
+$ octave
+
+and now all the functions should be available.
+
+
+Now I plan to walk you over the some examples on how to use the code.
+In this tutorial I am assuming familiarity with the material in my
+PhD thesis, which can be found in www.cs.cornell.edu/~renatoppl
+
+EXAMPLE 1: Generalized Second Price (GSP) Price of Anarchy (PoA)
+
+Suppose we have 4 slots with click-through-rates alpha = [1,.5,.4, .2] and
+we want to calculate the worst possible Price of Anarchy (ratio between 
+the welfare worse Nash equilibrium and the optimum welfare) for these
+click-through-rates.
+
+For this we can use gsp_poa. This function takes pi which is a permutation
+from players to slots, and takes the click-through-rates. Now, we can simply
+iterate over all permutations of 4 elements:
+
+octave:1> alpha = [1,.5,.4,.2];
+octave:2> worse_poa = -1;
+octave:3> for pi = perms([1:4])'
+>   worse_poa = max(worse_poa, gsp_poa(pi,alpha));
+> endfor
+octave:4> worse_poa
+worse_poa =  1.2545
+
+Now we get that the worse PoA for those particular click-through-rates is
+1.2545. Now suppose we want to iterate over all click-through-rates 
+alpha = [alpha(1), alpha(2), alpha(3), alpha(4)] where alpha(i) is a mulitple
+of .1 and alpha(i) is between zero and one. We have the function 
+lower_bound_poa for that:
+
+octave:1> [poa, alpha, v, b, pi] = lower_bound_poa(4,.1)
+poa =  1.2576
+alpha =  1.00000   0.60000   0.50000   0.50000
+v =      0.90909   0.45455   0.15152   0.00000
+b =      0.00000   0.45455   0.15152   0.00000
+pi =     2   3   1   4
+
+which gives is the worse Price of Anarchy, as well as the click-through-rates
+alpha that generate it, the values v and a set of bids b which are a Nash
+equilibrium inducing this PoA.
+
+
+
+CASE II: Cost of Efficiency
+
+Given certain click-through-rates, then we can compute the worse ratio
+between the optimal revenue equilibrium and the optimal revenue efficient
+equilibrium:
+
+octave:1> alpha = [1,.5,.4,.2];
+octave:2> [coe, v, b] = cost_of_efficiency(alpha);
+octave:3> coe
+coe =  1.0000
+
+Calling this function for various values we can get the data to construct
+the plot in Figure 4.2 of the thesis.
+
+
+
+
+CASE III: Adaptive Clinching Auction
+
+In order to calculate the outcome of the Adaptive Clinching Auction studied
+in Section 5 of the thesis, one can use the clinching function. For example,
+suppose we have players with values v = [5,7,9]; and budgets B = [1,2,1.5];
+For supply s=1, we can calculate the outcome of the clinching auction by:
+
+octave:1> v = [5,7,9]; B = [1,2,1.5]; s=1;
+octave:2> [x,pi] = clinching(v, B, s)
+octave:3> x
+x = 0.096963   0.542153   0.360884
+octave:4> pi
+pi = 0.41726   2.00000   1.50000
+
+This can be used to study properties of the Adaptive Clinching Auction. For
+example we use this function to get the data necessary to construct the
+plots in Figure 6.1 and Figure 6.2.
+
+
+
+

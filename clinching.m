@@ -53,11 +53,6 @@ function [x,pi] = clinching(v,B,s, tol=1E-6)
     % event 2
     E2 = compute_event_2(s,p,B,A,C);
   
-    p
-    E1
-    E2
-    str= "--------------------------"
-
     if (E1 <= E2)
       % calculates allocation and payment updates since last event (price
       % p), i.e., amount clinched by players until E1- (just before 
@@ -76,10 +71,7 @@ function [x,pi] = clinching(v,B,s, tol=1E-6)
         x(i) += delta(i);
         s -= delta(i);
       endfor
-
-      r=1
-      delta
-      
+  
       % now we see how allocation and payments get updated as the price
       % reaches E1, i.e., clinching that happens between E1- and E1.
       p = E1;
@@ -131,12 +123,6 @@ function [x,pi] = clinching(v,B,s, tol=1E-6)
           C  = union(C,[i]);
         endif
       endfor
-
-      r=2
-      p
-      E1
-      E2
-      delta
 
       p = E2;
 
